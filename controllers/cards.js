@@ -21,10 +21,7 @@ const deleteCard = (req, res, next) => Card.findById(req.params.cardId)
     return Card.findByIdAndRemove(req.params.cardId);
   })
   .then((card) => res.status(200).send(card))
-  .catch((err) => {
-    if (err.name === 'CastError') return next(new CastError('Передан некорректный id'));
-    next(err);
-  });
+  .catch(next);
 
 const putLikeCard = (req, res, next) => Card.findByIdAndUpdate(req.params.cardId,
   { $addToSet: { likes: req.user._id } },
@@ -35,7 +32,6 @@ const putLikeCard = (req, res, next) => Card.findByIdAndUpdate(req.params.cardId
   })
   .catch((err) => {
     if (err.name === 'ValidationError') return next(new CastError('Переданы некорректные данные для постановки/снятии лайка'));
-    if (err.name === 'CastError') return next(new CastError('Передан некорректный id'));
     next(err);
   });
 
@@ -48,7 +44,6 @@ const deleteLikeCard = (req, res, next) => Card.findByIdAndUpdate(req.params.car
   })
   .catch((err) => {
     if (err.name === 'ValidationError') return next(new CastError('Переданы некорректные данные для постановки/снятии лайка'));
-    if (err.name === 'CastError') return next(new CastError('Передан некорректный id'));
     next(err);
   });
 

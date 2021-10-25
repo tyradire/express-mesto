@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const NotFoundError = require('./errors/NotFoundError');
 const {
   login, createUser,
 } = require('./controllers/users');
@@ -32,8 +33,8 @@ app.use(verify);
 
 app.use(userRouter);
 app.use(cardRouter);
-app.use((req, res) => {
-  res.status(404).send({ message: 'Был запрошен несуществующий роут' });
+app.use((req, res, next) => {
+  next(new NotFoundError('Был запрошен несуществующий роут'));
 });
 app.use(errors());
 /* eslint-disable no-unused-vars, no-console */

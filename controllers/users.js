@@ -18,12 +18,7 @@ const getUserById = (req, res, next) => User.findById(req.params.userId)
     }
     return res.status(200).send(user);
   })
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      return next(new CastError('Передан некорректный id'));
-    }
-    next(err);
-  });
+  .catch(next);
 
 const getUser = (req, res, next) => User.findById(req.user)
   .then((user) => res.status(200).send(user))
@@ -42,7 +37,9 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       password: hash, email, name, about, avatar,
     }))
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(200).send({
+      email: user.email, name: user.name, about: user.about, avatar: user.avatar, _id: user._id,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') return next(new CastError('Переданы некорректные данные при создании пользователя'));
       next(err);
@@ -64,7 +61,7 @@ const login = (req, res, next) => {
         maxAge: 604800,
         httpOnly: true,
       })
-        .end();
+        .send({ message: 'Ответ об успешном логин' });
     })
     .catch(next);
 };

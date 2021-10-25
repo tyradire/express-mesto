@@ -13,10 +13,22 @@ cardRouter.post('/cards', celebrate({
 
 cardRouter.get('/cards', getCards);
 
-cardRouter.delete('/cards/:cardId', deleteCard);
+cardRouter.delete('/cards/:cardId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), deleteCard);
 
-cardRouter.put('/cards/:cardId/likes', putLikeCard);
+cardRouter.put('/cards/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), putLikeCard);
 
-cardRouter.delete('/cards/:cardId/likes', deleteLikeCard);
+cardRouter.delete('/cards/:cardId/likes', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), deleteLikeCard);
 
 module.exports = cardRouter;

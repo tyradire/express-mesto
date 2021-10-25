@@ -8,7 +8,11 @@ userRouter.get('/users', getUsers);
 
 userRouter.get('/users/me', getUser);
 
-userRouter.get('/users/:userId', getUserById);
+userRouter.get('/users/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), getUserById);
 
 userRouter.patch('/users/me', celebrate({
   body: Joi.object().keys({

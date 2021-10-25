@@ -3,7 +3,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const verify = (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) return res.status(401).send({ message: 'Необходима авторизация' });
+  if (!authorization) return next(new UnauthorizedError('Необходима авторизация'));
   const token = authorization.replace('Bearer ', '');
   let payload;
   try {
