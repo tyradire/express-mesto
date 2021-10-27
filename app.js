@@ -10,6 +10,9 @@ const {
 const {
   verify,
 } = require('./middlewares/auth');
+const {
+  urlValidator,
+} = require('./validator/validator');
 
 const PORT = 3000;
 const app = express();
@@ -26,6 +29,9 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(2),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().min(2).custom(urlValidator),
   }),
 }), createUser);
 
